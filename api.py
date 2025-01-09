@@ -129,9 +129,14 @@ def predict_sentiment(data: TweetInput):
     
     # Faire une prédiction avec le modèle
     prediction = model.predict(features)
+    prediction_proba = model.predict_proba(features)
     
     # Déterminer le sentiment en fonction de la prédiction
-    sentiment = "positif" if prediction[0] == 1 else "negatif"
+    sentiment = "Positif" if prediction[0] == 1 else "Négatif"
+    
+    # Probabilité associée à la classe prédite
+    confiance = round(prediction_proba[0, prediction[0]] * 100, 2)
+    confiance = confiance.astype(str)
     
     # Retourner le sentiment
-    return {"tweet": data.tweet, "sentiment": sentiment}
+    return {"tweet": data.tweet, "sentiment": sentiment, "confiance": f"{confiance}%"}

@@ -13,22 +13,23 @@ def get_sentiment(tweet):
         response = httpx.post(API_ENDPOINT, json=data)
         response.raise_for_status()
         result = response.json()
-        return result['sentiment']
+        return result['sentiment'], result["confiance"]
     except httpx.RequestError as e:
         st.error(f"Une erreur s'est produite : {e}")
         return None
 
 def main():
-    st.title("Prédiction de Sentiment d'un Tweet")
+    st.title("Prédiction du Sentiment d'un Tweet")
 
     # Demander à l'utilisateur de rentrer un tweet
     tweet = st.text_area("Entrez votre tweet ici :")
 
     if st.button("Prévoir le sentiment"):
         if tweet:
-            sentiment = get_sentiment(tweet)
+            sentiment, confiance = get_sentiment(tweet)
             if sentiment:
                 st.write(f"Le sentiment prédictif est : **{sentiment}**")
+                st.write(f"L'indice de confiance est de : {confiance}")
         else:
             st.warning("Veuillez entrer un tweet pour prédire son sentiment.")
 
