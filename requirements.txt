@@ -67,7 +67,6 @@ pyppeteer==2.0.0
 PyQt5==5.15.10
 PyQtWebEngine==5.15.6
 pyquery==2.0.1
-pywin32==305.1
 requests-html==0.10.0
 rsa==4.9
 safetensors==0.4.5
