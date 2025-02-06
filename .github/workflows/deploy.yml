@@ -32,7 +32,7 @@ jobs:
       run: streamlit run TestsUnitaires/app.py &
 
     - name: Wait for services to be ready
-      run: sleep 10
+      run: sleep 30
         
     - name: Run tests
       run: |
