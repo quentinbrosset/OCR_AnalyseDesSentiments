@@ -21,7 +21,14 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
-        python -m nltk.downloader punkt stopwords
+        python -m nltk.downloader punkt
+
+    - name: Set up Edge WebDriver
+      run: |
+        wget https://msedgedriver.azureedge.net/LATEST_VERSION/msedgedriver_win32.zip
+        unzip msedgedriver_win32.zip
+        chmod +x msedgedriver.exe
+        mv msedgedriver.exe /usr/local/bin/
         
     - name: Download NLTK data (stopwords)
       run: |
