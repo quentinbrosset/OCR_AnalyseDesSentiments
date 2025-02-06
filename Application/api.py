@@ -12,6 +12,7 @@ from joblib import load
 import string
 import re
 import nltk
+nltk.download('punkt')
 from nltk.stem import WordNetLemmatizer
 import numpy as np
 from pathlib import Path
