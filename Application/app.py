@@ -3,7 +3,7 @@ import httpx
 import json
 
 # Endpoint de l'API FastAPI
-API_ENDPOINT = "http://localhost:8000/predict/"
+API_ENDPOINT = "http://localhost:57077/predict/"
 
 def get_sentiment(tweet):
     # Préparer les données pour l'API
