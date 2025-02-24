@@ -30,21 +30,27 @@ jobs:
       uses: nanasess/setup-chromedriver@master
 
     - name: Start API
-      run: python Application/api.py &
+      run: |
+        nohup python Application/api.py > api.log 2>&1 &
+        sleep 5
+        cat api.log
 
     - name: Start Streamlit app
-      run: streamlit run Application/app.py &
+      run: |
+        nohup streamlit run Application/app.py > streamlit.log 2>&1 &
+        sleep 5
+        cat streamlit.log
 
     - name: Wait for services to be ready
-      run: sleep 30 
+      run: sleep 60  # Augmentez le délai d'attente à 60 secondes
 
     - name: Verify API is running
       run: |
-        curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:57077
+        curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:57077
 
     - name: Verify Streamlit app is running
       run: |
-        curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:8501
+        curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8501
 
     - name: Run tests
       run: |
