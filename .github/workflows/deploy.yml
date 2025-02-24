@@ -20,11 +20,31 @@ jobs:
       run: |
         pip install -r requirements.txt
         python -m nltk.downloader punkt
-        
+
     - name: Download NLTK data (stopwords)
       run: |
         python -c "import nltk; nltk.download('stopwords')"
-        
+
+    - name: Set up Microsoft Edge
+      uses: browser-actions/setup-edge@latest
+      with:
+        edge-version: 'latest'
+
+    - name: Download msedgedriver
+      run: |
+        wget https://msedgedriver.azureedge.net/<version>/edgedriver_linux64.zip -O msedgedriver.zip
+        unzip msedgedriver.zip
+        chmod +x msedgedriver
+
+    - name: Verify msedgedriver permissions
+      run: ls -l msedgedriver
+
+    - name: Display Edge version
+      run: edge --version
+
+    - name: Display msedgedriver version
+      run: ./msedgedriver --version
+
     - name: Start API
       run: python TestsUnitaires/api.py &
 
@@ -33,11 +53,11 @@ jobs:
 
     - name: Wait for services to be ready
       run: sleep 30
-        
+
     - name: Run tests
       run: |
         python -m pytest TestsUnitaires/
-        
+
     - name: Deploiement sur Heroku
       uses: akhileshns/heroku-deploy@v3.13.15
       with:
