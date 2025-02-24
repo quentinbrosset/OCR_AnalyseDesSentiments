@@ -30,13 +30,13 @@ jobs:
       uses: nanasess/setup-chromedriver@master
 
     - name: Start API
-      run: python TestsUnitaires/api.py &
+      run: python Application/api.py &
 
     - name: Start Streamlit app
-      run: streamlit run TestsUnitaires/app.py &
+      run: streamlit run Application/app.py &
 
     - name: Wait for services to be ready
-      run: sleep 20 
+      run: sleep 30 
 
     - name: Verify API is running
       run: |
