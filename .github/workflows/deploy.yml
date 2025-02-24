@@ -25,26 +25,6 @@ jobs:
       run: |
         python -c "import nltk; nltk.download('stopwords')"
 
-    - name: Set up Microsoft Edge
-      uses: browser-actions/setup-edge@latest
-      with:
-        edge-version: 'latest'
-
-    - name: Download msedgedriver
-      run: |
-        wget https://msedgedriver.azureedge.net/<version>/edgedriver_linux64.zip -O msedgedriver.zip
-        unzip msedgedriver.zip
-        chmod +x msedgedriver
-
-    - name: Verify msedgedriver permissions
-      run: ls -l msedgedriver
-
-    - name: Display Edge version
-      run: edge --version
-
-    - name: Display msedgedriver version
-      run: ./msedgedriver --version
-
     - name: Start API
       run: python TestsUnitaires/api.py &
 
