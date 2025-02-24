@@ -25,6 +25,7 @@ jobs:
         python -m nltk.downloader punkt
         python -m nltk.downloader stopwords
         python -m nltk.downloader punkt_tab
+        python -m nltk.downloader wordnet
 
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
