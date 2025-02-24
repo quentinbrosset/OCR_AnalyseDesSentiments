@@ -34,10 +34,10 @@ jobs:
       run: ls -R
 
     - name: Start API
-      run: python TestsUnitaires/api.py &
+      run: python Application/api.py &
 
     - name: Start Streamlit app
-      run: streamlit run TestsUnitaires/app.py &
+      run: streamlit run Application/app.py &
 
     - name: Wait for services to be ready
       run: sleep 30
