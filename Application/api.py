@@ -16,6 +16,7 @@ from nltk.stem import WordNetLemmatizer
 import numpy as np
 from pathlib import Path
 import joblib
+import logging
 
 # Charger le modèle sauvegardé
 model_path = Path(__file__).resolve().parent / 'best_model.joblib'
@@ -23,6 +24,13 @@ model = joblib.load(model_path)
 
 # Initialiser l'application FastAPI
 app = FastAPI()
+
+logging.basicConfig(level=logging.INFO)
+logging.info("Starting API on port 57077")
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, host='0.0.0.0', port=57077)
 
 # Définir la structure des données d'entrée
 class TweetInput(BaseModel):
