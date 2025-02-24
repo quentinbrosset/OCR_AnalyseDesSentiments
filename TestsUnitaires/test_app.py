@@ -11,7 +11,7 @@ import os
 def driver():
     driver_path = os.path.join(os.path.dirname(__file__), "msedgedriver.exe")
     options = webdriver.EdgeOptions()
-    # options.add_argument('--headless')  # Désactiver pour mode non-headless
+    options.add_argument('--headless')  # Désactiver pour mode non-headless
     driver = webdriver.Edge(service=EdgeService(driver_path), options=options)
     yield driver
     driver.quit()
