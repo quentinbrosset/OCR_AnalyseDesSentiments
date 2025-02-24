@@ -25,13 +25,9 @@ jobs:
         python -m nltk.downloader punkt
         python -m nltk.downloader stopwords
         python -m nltk.downloader punkt_tab
-        python -m nltk.downloader wordnet
 
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
-
-    - name: List files
-      run: ls -R
 
     - name: Start API
       run: python TestsUnitaires/api.py &
@@ -40,7 +36,15 @@ jobs:
       run: streamlit run TestsUnitaires/app.py &
 
     - name: Wait for services to be ready
-      run: sleep 10
+      run: sleep 20 
+
+    - name: Verify API is running
+      run: |
+        curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:57077
+
+    - name: Verify Streamlit app is running
+      run: |
+        curl --retry 5 --retry-delay 5 --retry-connrefused http://localhost:8501
 
     - name: Run tests
       run: |
