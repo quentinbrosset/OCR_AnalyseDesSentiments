@@ -30,9 +30,6 @@ jobs:
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
 
-    - name: List files
-      run: ls -R
-
     - name: Start API
       run: python Application/api.py &
 
