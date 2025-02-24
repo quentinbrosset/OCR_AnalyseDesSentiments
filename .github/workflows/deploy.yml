@@ -1,3 +1,5 @@
+name: Deploy and Test
+
 on:
   push:
     branches:
@@ -27,6 +29,9 @@ jobs:
 
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
+
+    - name: List files
+      run: ls -R
 
     - name: Start API
       run: python TestsUnitaires/api.py &
