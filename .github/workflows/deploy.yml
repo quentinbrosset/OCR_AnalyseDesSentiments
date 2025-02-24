@@ -24,12 +24,9 @@ jobs:
     - name: Download NLTK data (stopwords)
       run: |
         python -c "import nltk; nltk.download('stopwords')"
-<<<<<<< HEAD
 
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
-=======
->>>>>>> 501b9407d506694799940be434d3aa873d1fe9b4
 
     - name: Start API
       run: python TestsUnitaires/api.py &
