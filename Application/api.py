@@ -12,8 +12,6 @@ from joblib import load
 import string
 import re
 import nltk
-nltk.download('punkt_tab')
-nltk.download('wordnet')
 from nltk.stem import WordNetLemmatizer
 import numpy as np
 from pathlib import Path
@@ -71,8 +69,7 @@ def sup_nombres(word_list):
     return [word for word in word_list if not (isinstance(word, (int, float)) or is_number(word))]
 
 # Chargement du modèle USE
-# embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
-embed = hub.load("https://www.kaggle.com/models/google/universal-sentence-encoder/TensorFlow2/universal-sentence-encoder/2")
+embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
 # Initialisation du lemmatiseur
 lemmatizer = WordNetLemmatizer()
