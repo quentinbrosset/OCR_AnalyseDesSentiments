@@ -23,13 +23,14 @@ jobs:
         pip install -r requirements.txt
         pip install webdriver-manager
         python -m nltk.downloader punkt
-
-    - name: Download NLTK data (stopwords)
-      run: |
-        python -c "import nltk; nltk.download('stopwords')"
+        python -m nltk.downloader stopwords
+        python -m nltk.downloader punkt_tab
 
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
+
+    - name: List files
+      run: ls -R
 
     - name: Start API
       run: python TestsUnitaires/api.py &
@@ -38,7 +39,7 @@ jobs:
       run: streamlit run TestsUnitaires/app.py &
 
     - name: Wait for services to be ready
-      run: sleep 30
+      run: sleep 10
 
     - name: Run tests
       run: |
