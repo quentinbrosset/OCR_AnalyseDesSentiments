@@ -31,15 +31,11 @@ jobs:
 
     - name: Start API
       run: |
-        nohup uvicorn Application.api:app --host 127.0.0.1 --port 57077 > api.log 2>&1 &
-        sleep 5
-        cat api.log
+        nohup uvicorn Application.api:app --reload --host 127.0.0.1 --port 57077
 
     - name: Start Streamlit app
       run: |
-        nohup streamlit run Application/app.py > streamlit.log 2>&1 &
-        sleep 5
-        cat streamlit.log
+        nohup streamlit run Application/app.py
 
     - name: Wait for services to be ready
       run: sleep 60  # Augmentez le délai d'attente à 60 secondes
