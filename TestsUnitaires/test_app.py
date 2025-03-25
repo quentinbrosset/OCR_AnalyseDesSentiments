@@ -7,6 +7,27 @@ from selenium.webdriver.support import expected_conditions as EC
 import logging
 import os
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
+
+@pytest.fixture(scope="module")
+def driver():
+    # Configuration des options Chrome pour GitHub Actions
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')  # Mode headless obligatoire sur GitHub Actions
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+    chrome_options.add_argument('--remote-debugging-port=9222')
+    
+    # Utilisation de webdriver_manager pour gérer le driver
+    service = Service(ChromeDriverManager().install())
+    
+    # Création du driver avec les options spécifiées
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+    
+    yield driver
+    
+    # Fermeture du driver après les tests
+    driver.quit()
 
 @pytest.fixture(scope="module")
 def driver():
