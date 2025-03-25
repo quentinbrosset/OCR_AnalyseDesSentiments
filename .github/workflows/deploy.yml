@@ -1,23 +1,20 @@
 name: Deploy and Test
-
 on:
   push:
     branches:
       - main
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-
+    
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: '3.11'
-
+    
     - name: Install dependencies
       run: |
         pip install -r requirements.txt
@@ -25,33 +22,32 @@ jobs:
         python -m nltk.downloader punkt
         python -m nltk.downloader stopwords
         python -m nltk.downloader punkt_tab
-
+    
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
-
-    - name: Start API
+    
+    - name: Start API in background
       run: |
-        nohup uvicorn Application.api:app --reload --host 127.0.0.1 --port 57077
-
-    - name: Start Streamlit app
+        uvicorn Application.api:app --host 0.0.0.0 --port 57077 &
+        sleep 10  # Attendre que l'API démarre
+    
+    - name: Start Streamlit app in background
       run: |
-        nohup streamlit run Application/app.py
-
-    - name: Wait for services to be ready
-      run: sleep 60  # Augmentez le délai d'attente à 60 secondes
-
+        streamlit run Application/app.py &
+        sleep 10  # Attendre que Streamlit démarre
+    
     - name: Verify API is running
       run: |
         curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:57077
-
+    
     - name: Verify Streamlit app is running
       run: |
         curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8501
-
+    
     - name: Run tests
       run: |
         python -m pytest TestsUnitaires/
-
+    
     - name: Deploiement sur Heroku
       uses: akhileshns/heroku-deploy@v3.13.15
       with:
