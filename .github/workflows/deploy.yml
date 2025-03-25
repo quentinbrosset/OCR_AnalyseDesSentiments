@@ -21,6 +21,7 @@ jobs:
         pip install webdriver-manager
         python -m nltk.downloader punkt
         python -m nltk.downloader stopwords
+        python -m nltk.downloader wordnet
         python -m nltk.downloader punkt_tab
     
     - name: Set up ChromeDriver
