@@ -11,7 +11,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 @pytest.fixture(scope="module")
 def driver():
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')  # Désactiver pour mode non-headless
+    #options.add_argument('--headless')  # Désactiver pour mode non-headless
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--no-sandbox')
     driver_path = ChromeDriverManager().install()
