@@ -31,9 +31,7 @@ jobs:
 
     - name: Start API
       run: |
-        nohup uvicorn Application.api:app --host 127.0.0.1 --port 57077 --no-reload & 
-        sleep 15  # Attendre que le serveur démarre
-        curl --retry 5 --retry-connrefused http://127.0.0.1:57077  # Vérifier qu'il tourne
+        nohup uvicorn Application.api:app --reload --host 127.0.0.1 --port 57077
 
     - name: Start Streamlit app
       run: |
