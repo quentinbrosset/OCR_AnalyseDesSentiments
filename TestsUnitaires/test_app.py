@@ -9,25 +9,34 @@ import os
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
+
 @pytest.fixture(scope="module")
 def driver():
     # Configuration des options Chrome pour GitHub Actions
     chrome_options = Options()
-    chrome_options.add_argument('--headless')  # Mode headless obligatoire sur GitHub Actions
+    chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--remote-debugging-port=9222')
     
+    # Ajout d'un répertoire utilisateur unique
+    user_data_dir = os.path.join(os.getcwd(), 'chrome_user_data')
+    os.makedirs(user_data_dir, exist_ok=True)
+    chrome_options.add_argument(f'--user-data-dir={user_data_dir}')
+    
     # Utilisation de webdriver_manager pour gérer le driver
     service = Service(ChromeDriverManager().install())
     
-    # Création du driver avec les options spécifiées
-    driver = webdriver.Chrome(service=service, options=chrome_options)
-    
-    yield driver
-    
-    # Fermeture du driver après les tests
-    driver.quit()
+    try:
+        # Création du driver avec les options spécifiées
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+        yield driver
+    except Exception as e:
+        print(f"Erreur lors de la création du driver: {e}")
+        raise
+    finally:
+        # Fermeture du driver après les tests
+        driver.quit()
 
 @pytest.fixture(scope="module")
 def driver():
