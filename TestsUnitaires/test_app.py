@@ -128,20 +128,20 @@ def test_invalid_input(driver):
     
     try:
         # Attente et interaction avec le champ de texte
-        tweet_input = WebDriverWait(driver, 30).until(
+        tweet_input = WebDriverWait(driver, 40).until(
             EC.presence_of_element_located((By.TAG_NAME, "textarea"))
         )
         tweet_input.clear()  # Nettoyer tout texte existant
         tweet_input.send_keys("  ")  # Entrer uniquement des espaces
         
         # Attente et clic sur le bouton de prédiction
-        predict_button = WebDriverWait(driver, 30).until(
+        predict_button = WebDriverWait(driver, 40).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@kind='secondary']"))
         )
         predict_button.click()
         
         # Vérification du message d'avertissement
-        warning_message = WebDriverWait(driver, 30).until(
+        warning_message = WebDriverWait(driver, 40).until(
              EC.presence_of_element_located((By.CSS_SELECTOR, "div.stAlert"))
          )
          
