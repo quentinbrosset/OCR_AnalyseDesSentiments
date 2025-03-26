@@ -128,24 +128,38 @@ def test_invalid_input(driver):
     
     try:
         # Attente et interaction avec le champ de texte
-        tweet_input = WebDriverWait(driver, 40).until(
+        tweet_input = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.TAG_NAME, "textarea"))
         )
         tweet_input.clear()  # Nettoyer tout texte existant
         tweet_input.send_keys("  ")  # Entrer uniquement des espaces
         
         # Attente et clic sur le bouton de prédiction
-        predict_button = WebDriverWait(driver, 40).until(
+        predict_button = WebDriverWait(driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@kind='secondary']"))
         )
         predict_button.click()
         
         # Vérification du message d'avertissement
-        warning_message = WebDriverWait(driver, 40).until(
-             EC.presence_of_element_located((By.CSS_SELECTOR, "div.stAlert"))
-         )
-         
-        assert 'Veuillez entrer un tweet valide' in warning_message.text, f"Message d'erreur inattendu : {warning_message.text}"
+        # Essayez différentes méthodes de localisation
+        try:
+            warning_message = WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "div.stAlert"))
+            )
+        except TimeoutException:
+            try:
+                warning_message = WebDriverWait(driver, 10).until(
+                    EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Veuillez entrer un tweet valide')]"))
+                )
+            except TimeoutException:
+                # Ajoutez du logging pour comprendre ce qui se passe
+                print("Page source:", driver.page_source)
+                print("Current URL:", driver.current_url)
+                raise AssertionError("Impossible de trouver le message d'avertissement")
+        
+        # Vérifiez le texte avec plus de flexibilité
+        assert "Veuillez entrer un tweet valide" in warning_message.text.replace(".", ""), \
+            f"Message d'erreur inattendu : {warning_message.text}"
         
     except (TimeoutException, AssertionError) as e:
         logger.error(f"Échec du test d'entrée invalide : {e}")
