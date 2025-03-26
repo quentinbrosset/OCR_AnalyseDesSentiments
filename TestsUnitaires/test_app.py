@@ -12,29 +12,31 @@ from selenium.webdriver.chrome.options import Options
 @pytest.fixture(scope="module")
 def driver():
     # Configuration des options Chrome pour GitHub Actions
-    chrome_options = Options()
+    chrome_options = webdriver.ChromeOptions() 
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--remote-debugging-port=9222')
     
-    # Ajout d'un répertoire utilisateur unique
-    user_data_dir = os.path.join(os.getcwd(), 'chrome_user_data')
+    # Spécifier un répertoire utilisateur unique dans /tmp
+    user_data_dir = '/tmp/chrome-user-data'
     os.makedirs(user_data_dir, exist_ok=True)
     chrome_options.add_argument(f'--user-data-dir={user_data_dir}')
     
-    # Utilisation de webdriver_manager pour gérer le driver
+    # Utilisation de webdriver_manager avec des paramètres explicites
     service = Service(ChromeDriverManager().install())
     
     try:
-        # Création du driver avec les options spécifiées
+        # Création du driver avec gestion explicite des erreurs
         driver = webdriver.Chrome(service=service, options=chrome_options)
         yield driver
+    except WebDriverException as e:
+        print(f"Erreur WebDriver: {e}")
+        raise
     except Exception as e:
         print(f"Erreur lors de la création du driver: {e}")
         raise
     finally:
-        # Fermeture du driver après les tests
         driver.quit()
 
 def test_predict_positive_sentiment(driver):
