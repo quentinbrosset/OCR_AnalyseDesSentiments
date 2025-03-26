@@ -1,1 +1,1 @@
-web: python Application/app.py
+web: streamlit run Application/app.py
