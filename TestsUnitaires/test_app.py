@@ -156,7 +156,7 @@ def test_invalid_input(driver):
                     EC.presence_of_element_located((By.CLASS_NAME, "error-message"))
                 )
         
-        assert "Veuillez entrer un tweet valide" in warning_message.text, f"Message d'erreur inattendu : {warning_message.text}"
+        assert "Veuillez entrer un tweet valide." in warning_message.text, f"Message d'erreur inattendu : {warning_message.text}"
     
     except (TimeoutException, AssertionError) as e:
         logger.error(f"Échec du test d'entrée invalide : {e}")
