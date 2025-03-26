@@ -141,23 +141,12 @@ def test_invalid_input(driver):
         predict_button.click()
         
         # Vérification du message d'avertissement
-        # J'ai ajouté plusieurs stratégies de localisation pour augmenter la robustesse
-        try:
-            warning_message = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "div.stAlert"))
-            )
-        except TimeoutException:
-            try:
-                warning_message = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Veuillez entrer un tweet valide')]"))
-                )
-            except TimeoutException:
-                warning_message = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.CLASS_NAME, "error-message"))
-                )
-        
+        warning_message = WebDriverWait(driver, 30).until(
+             EC.presence_of_element_located((By.CSS_SELECTOR, "div.stAlert"))
+         )
+         
         assert "Veuillez entrer un tweet valide." in warning_message.text, f"Message d'erreur inattendu : {warning_message.text}"
-    
+        
     except (TimeoutException, AssertionError) as e:
         logger.error(f"Échec du test d'entrée invalide : {e}")
         driver.save_screenshot("invalid_input_error.png")
