@@ -29,7 +29,7 @@ def main():
         cleaned_tweet = tweet.strip()
         # Vérifier que le tweet contient au moins deux caractères non-espaces
         if len(cleaned_tweet.replace(" ", "")) < 2:
-            st.warning("Veuillez entrer un tweet valide.")
+            st.warning("Veuillez entrer un tweet valide")
         else:
             sentiment, confiance = get_sentiment(cleaned_tweet)
             if sentiment:
