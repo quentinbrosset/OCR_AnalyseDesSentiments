@@ -9,7 +9,6 @@ import os
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 
-
 @pytest.fixture(scope="module")
 def driver():
     # Configuration des options Chrome pour GitHub Actions
@@ -37,17 +36,6 @@ def driver():
     finally:
         # Fermeture du driver après les tests
         driver.quit()
-
-@pytest.fixture(scope="module")
-def driver():
-    options = webdriver.ChromeOptions()
-    #options.add_argument('--headless')  # Désactiver pour mode non-headless
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--no-sandbox')
-    driver_path = ChromeDriverManager().install()
-    driver = webdriver.Chrome(service=Service(driver_path), options=options)
-    yield driver
-    driver.quit()
 
 def test_predict_positive_sentiment(driver):
     driver.get("http://192.168.1.14:8501")
