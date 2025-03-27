@@ -158,7 +158,7 @@ def test_invalid_input(driver):
                 raise AssertionError("Impossible de trouver le message d'avertissement")
         
         # Vérifiez le texte avec plus de flexibilité
-        assert "Veuillez entrer un tweet valide" in warning_message.text.replace(".", ""), \
+        assert "Veuillez entrer un tweet valide" in warning_message.text, \
             f"Message d'erreur inattendu : {warning_message.text}"
         
     except (TimeoutException, AssertionError) as e:
