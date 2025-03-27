@@ -140,22 +140,33 @@ def test_invalid_input(driver):
         )
         predict_button.click()
         
-        # Vérification du message d'avertissement
-        # Essayez différentes méthodes de localisation
-        try:
-            warning_message = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, "div.stAlert"))
-            )
-        except TimeoutException:
+        # Étapes de débogage
+        print("Page source après clic:", driver.page_source)
+        
+        # Localisation plus flexible du message d'avertissement
+        warning_locators = [
+            (By.CSS_SELECTOR, "div[data-testid='stAlert']"),  # Essayez un sélecteur de test plus spécifique
+            (By.CSS_SELECTOR, "div.stAlert"),
+            (By.XPATH, "//div[contains(text(), 'Veuillez entrer un tweet valide')]"),
+            (By.XPATH, "//*[contains(text(), 'Veuillez entrer un tweet valide')]")
+        ]
+        
+        warning_message = None
+        for locator in warning_locators:
             try:
                 warning_message = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located((By.XPATH, "//div[contains(text(), 'Veuillez entrer un tweet valide')]"))
+                    EC.presence_of_element_located(locator)
                 )
+                if warning_message:
+                    break
             except TimeoutException:
-                # Ajoutez du logging pour comprendre ce qui se passe
-                print("Page source:", driver.page_source)
-                print("Current URL:", driver.current_url)
-                raise AssertionError("Impossible de trouver le message d'avertissement")
+                continue
+        
+        if not warning_message:
+            print("Aucun message d'avertissement trouvé")
+            print("URL actuelle:", driver.current_url)
+            print("Page source:", driver.page_source)
+            raise AssertionError("Impossible de trouver le message d'avertissement")
         
         # Vérifiez le texte avec plus de flexibilité
         assert "Veuillez entrer un tweet valide" in warning_message.text, \
