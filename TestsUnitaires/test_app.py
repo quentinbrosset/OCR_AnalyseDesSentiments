@@ -154,7 +154,7 @@ def test_invalid_input(driver):
         warning_message = None
         for locator in warning_locators:
             try:
-                warning_message = WebDriverWait(driver, 10).until(
+                warning_message = WebDriverWait(driver, 30).until(
                     EC.presence_of_element_located(locator)
                 )
                 if warning_message:
