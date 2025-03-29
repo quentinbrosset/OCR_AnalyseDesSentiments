@@ -138,39 +138,58 @@ def test_invalid_input(driver):
         predict_button = WebDriverWait(driver, 30).until(
             EC.element_to_be_clickable((By.XPATH, "//button[@kind='secondary']"))
         )
-        predict_button.click()
         
-        # Étapes de débogage
-        print("Page source après clic:", driver.page_source)
+        # Défiler jusqu'au bouton pour s'assurer qu'il est visible
+        driver.execute_script("arguments[0].scrollIntoView(true);", predict_button)
+        time.sleep(0.5)  # Petite pause pour s'assurer que le défilement est terminé
         
-        # Localisation plus flexible du message d'avertissement
-        warning_locators = [
-            (By.CSS_SELECTOR, "div[data-testid='stAlert']"),  # Essayez un sélecteur de test plus spécifique
-            (By.CSS_SELECTOR, "div.stAlert"),
-            (By.XPATH, "//div[contains(text(), 'Veuillez entrer un tweet valide')]"),
-            (By.XPATH, "//*[contains(text(), 'Veuillez entrer un tweet valide')]")
-        ]
+        # Clic sur le bouton avec JavaScript pour éviter les problèmes de clic
+        driver.execute_script("arguments[0].click();", predict_button)
         
+        # Petite pause pour laisser l'application réagir
+        time.sleep(1)
+        
+        # Fonction de nouvelle tentative pour trouver le message d'avertissement
+        def find_warning_message():
+            warning_locators = [
+                (By.CSS_SELECTOR, "div[data-testid='stAlert']"),
+                (By.CSS_SELECTOR, "div.stAlert"),
+                (By.XPATH, "//div[contains(text(), 'Veuillez entrer un tweet valide')]"),
+                (By.XPATH, "//*[contains(text(), 'Veuillez entrer un tweet valide')]"),
+                (By.XPATH, "//div[contains(@class, 'stAlert')]")
+            ]
+            
+            for locator in warning_locators:
+                elements = driver.find_elements(*locator)
+                for element in elements:
+                    if "Veuillez entrer un tweet valide" in element.text:
+                        return element
+            return None
+        
+        # Attente avec nouvelle tentative
+        start_time = time.time()
         warning_message = None
-        for locator in warning_locators:
-            try:
-                warning_message = WebDriverWait(driver, 30).until(
-                    EC.presence_of_element_located(locator)
-                )
-                if warning_message:
-                    break
-            except TimeoutException:
-                continue
+        timeout = 30  # 30 secondes de timeout
         
+        while time.time() - start_time < timeout:
+            warning_message = find_warning_message()
+            if warning_message:
+                break
+            time.sleep(0.5)  # Attendre 500ms avant de réessayer
+            
+        # Si aucun message n'est trouvé après le timeout
         if not warning_message:
-            print("Aucun message d'avertissement trouvé")
+            logger.error("Aucun message d'avertissement trouvé après le timeout")
+            driver.save_screenshot("warning_not_found.png")
             print("URL actuelle:", driver.current_url)
             print("Page source:", driver.page_source)
             raise AssertionError("Impossible de trouver le message d'avertissement")
         
-        # Vérifiez le texte avec plus de flexibilité
+        # Vérifier le contenu du message
         assert "Veuillez entrer un tweet valide" in warning_message.text, \
             f"Message d'erreur inattendu : {warning_message.text}"
+        
+        logger.info("Test d'entrée invalide réussi : message d'avertissement correctement affiché")
         
     except (TimeoutException, AssertionError) as e:
         logger.error(f"Échec du test d'entrée invalide : {e}")
