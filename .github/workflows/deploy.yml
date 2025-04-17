@@ -53,13 +53,14 @@ jobs:
       run: |
         python -m pytest TestsUnitaires/ -v --tb=short --timeout=300
     
-    - name: Install Heroku CLI
-      run: |
-        curl https://cli-assets.heroku.com/install.sh | sh
-    
-    - name: Deploiement sur Heroku
-      uses: akhileshns/heroku-deploy@v3.13.15
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-        heroku_email: ${{ secrets.HEROKU_EMAIL }}
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        package: .
