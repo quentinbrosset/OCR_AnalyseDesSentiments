@@ -52,6 +52,9 @@ jobs:
     - name: Run tests
       run: |
         python -m pytest TestsUnitaires/ -v --tb=short --timeout=300
+        
+    - name: Make startup script executable
+      run: chmod +x startup.sh
     
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2

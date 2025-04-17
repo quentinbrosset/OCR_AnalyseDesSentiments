@@ -1,8 +1,0 @@
-.github/
-Notebooks/
-TestsUnitaires/
-*.md
-.git/
-**/__pycache__/
-*.pyc
-*.ipynb
