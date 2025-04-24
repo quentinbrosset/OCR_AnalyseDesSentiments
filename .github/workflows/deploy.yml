@@ -34,7 +34,6 @@ jobs:
         # Télécharger explicitement
         model = hub.load('https://tfhub.dev/google/universal-sentence-encoder/4')
         print('Modèle téléchargé et mis en cache dans ./models/use')
-        ")"
     
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
