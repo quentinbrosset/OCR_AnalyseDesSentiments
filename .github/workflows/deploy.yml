@@ -23,6 +23,11 @@ jobs:
         python -m nltk.downloader stopwords
         python -m nltk.downloader wordnet
         python -m nltk.downloader punkt_tab
+
+    - name: Télécharger le modèle TensorFlow Hub
+      run: |
+        mkdir -p models/use
+        python -c "import tensorflow_hub as hub; hub.load('https://tfhub.dev/google/universal-sentence-encoder/4', tags='', download_path='./models/use')"
     
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
