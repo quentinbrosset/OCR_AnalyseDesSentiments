@@ -27,13 +27,21 @@ jobs:
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
     
+    - name: Create env file
+      run: |
+        echo "WEBSITES_PORT=8501" > .env
+        echo "API_URL=http://localhost:8000" >> .env
+    
     - name: Start API in background
       run: |
+        # Pour les tests, on utilise le port 57077 localement
         uvicorn Application.api:app --host 0.0.0.0 --port 57077 &
         sleep 10  # Attendre que l'API démarre
     
     - name: Start Streamlit app in background
       run: |
+        # Définir la variable pour les tests locaux
+        export API_URL="http://localhost:57077"
         streamlit run Application/app.py &
         sleep 10  # Attendre que Streamlit démarre
     
@@ -51,6 +59,8 @@ jobs:
     
     - name: Run tests
       run: |
+        # Définir la variable pour les tests
+        export API_URL="http://localhost:57077"
         python -m pytest TestsUnitaires/ -v --tb=short --timeout=300
         
     - name: Make startup script executable
