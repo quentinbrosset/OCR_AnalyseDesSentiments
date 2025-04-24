@@ -38,11 +38,10 @@ def main():
         if len(cleaned_tweet.replace(" ", "")) < 2:
             st.warning("Veuillez entrer un tweet valide.")
         else:
-            with st.spinner("Analyse en cours..."):
-                sentiment, confiance = get_sentiment(cleaned_tweet)
-                if sentiment:
-                    st.write(f"Le sentiment prédictif est : **{sentiment}**")
-                    st.write(f"L'indice de confiance est de : {confiance}")
+            sentiment, confiance = get_sentiment(cleaned_tweet)
+            if sentiment:
+                st.write(f"Le sentiment prédictif est : **{sentiment}**")
+                st.write(f"L'indice de confiance est de : {confiance}")
 
 if __name__ == "__main__":
     main()
