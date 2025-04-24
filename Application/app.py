@@ -1,13 +1,9 @@
 import streamlit as st
 import httpx
 import json
-import os
 
 # Endpoint de l'API FastAPI
-# Si une variable d'environnement API_URL est définie, l'utiliser, sinon utiliser localhost
-API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000")
-API_ENDPOINT = f"{API_URL}/predict/"
-
+API_ENDPOINT = "http://127.0.0.1:57077/predict/"
 
 def get_sentiment(tweet):
     # Préparer les données pour l'API
@@ -20,17 +16,14 @@ def get_sentiment(tweet):
         return result['sentiment'], result["confiance"]
     except httpx.RequestError as e:
         st.error(f"Une erreur s'est produite : {e}")
-        return None, None
+        return None
 
 def main():
     st.title("Prédiction du Sentiment d'un Tweet")
-    
-    # Afficher l'URL de l'API en mode debug (vous pourrez retirer ceci plus tard)
-    st.sidebar.write(f"API endpoint: {API_ENDPOINT}")
-    
+
     # Demander à l'utilisateur de rentrer un tweet
     tweet = st.text_area("Entrez votre tweet ici :")
-    
+
     if st.button("Prévoir le sentiment"):
         # Supprimer les espaces en début et en fin de chaîne
         cleaned_tweet = tweet.strip()

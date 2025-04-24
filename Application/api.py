@@ -16,7 +16,6 @@ from nltk.stem import WordNetLemmatizer
 import numpy as np
 from pathlib import Path
 import joblib
-import os
 
 # Charger le modèle sauvegardé
 model_path = Path(__file__).resolve().parent / 'best_model.joblib'
@@ -69,8 +68,7 @@ def is_number(s):
 def sup_nombres(word_list):
     return [word for word in word_list if not (isinstance(word, (int, float)) or is_number(word))]
 
-
-os.environ['TFHUB_CACHE_DIR'] = os.path.join(os.path.dirname(__file__), 'models', 'use')
+# Chargement du modèle USE
 embed = hub.load("https://tfhub.dev/google/universal-sentence-encoder/4")
 
 # Initialisation du lemmatiseur
