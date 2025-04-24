@@ -27,7 +27,7 @@ jobs:
     - name: Télécharger le modèle TensorFlow Hub
       run: |
         mkdir -p models/use
-        python -c "
+        python -c
         import tensorflow_hub as hub
         import os
         os.environ['TFHUB_CACHE_DIR'] = './models/use'
