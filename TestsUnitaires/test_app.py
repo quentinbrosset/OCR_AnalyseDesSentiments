@@ -78,16 +78,16 @@ def test_predict_positive_sentiment(driver):
         
         # Attente et clic sur le bouton de prédiction
         predict_button = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[@kind='secondary']"))
+            EC.element_to_be_clickable((By.XPATH, "//button[key='Prévoir le sentiment']"))
         )
         predict_button.click()
         
         # Vérification du résultat
-        result = WebDriverWait(driver, 30).until(
+        result_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.stMarkdown"))
         )
-        
-        assert "Le sentiment prédictif est : Positif" in result.text, f"Résultat inattendu : {result.text}"
+        result_text = result_element.text
+        assert "Le sentiment prédictif est : Positif" in result_text, f"Résultat inattendu : {result_element.text}"
         
     except (TimeoutException, AssertionError) as e:
         logger.error(f"Échec du test de sentiment positif : {e}")
@@ -107,16 +107,17 @@ def test_predict_negative_sentiment(driver):
         
         # Attente et clic sur le bouton de prédiction
         predict_button = WebDriverWait(driver, 30).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[@kind='secondary']"))
+            EC.element_to_be_clickable((By.XPATH, "//button[key='Prévoir le sentiment']"))
         )
         predict_button.click()
         
         # Vérification du résultat
-        result = WebDriverWait(driver, 30).until(
+        result_element = WebDriverWait(driver, 30).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.stMarkdown"))
         )
+        result_text = result_element.text
         
-        assert "Le sentiment prédictif est : Négatif" in result.text, f"Résultat inattendu : {result.text}"
+        assert "Le sentiment prédictif est : Négatif" in result.text, f"Résultat inattendu : {result_element.text}"
         
     except (TimeoutException, AssertionError) as e:
         logger.error(f"Échec du test de sentiment négatif : {e}")
