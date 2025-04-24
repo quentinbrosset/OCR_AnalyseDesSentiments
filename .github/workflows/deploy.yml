@@ -27,7 +27,14 @@ jobs:
     - name: Télécharger le modèle TensorFlow Hub
       run: |
         mkdir -p models/use
-        python -c "import tensorflow_hub as hub; hub.load('https://tfhub.dev/google/universal-sentence-encoder/4', tags='', download_path='./models/use')"
+        python -c "
+        import tensorflow_hub as hub
+        import os
+        os.environ['TFHUB_CACHE_DIR'] = './models/use'
+        # Télécharger explicitement
+        model = hub.load('https://tfhub.dev/google/universal-sentence-encoder/4')
+        print('Modèle téléchargé et mis en cache dans ./models/use')
+        ")"
     
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@master
