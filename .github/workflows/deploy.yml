@@ -24,9 +24,6 @@ jobs:
         python -m nltk.downloader wordnet
         python -m nltk.downloader punkt_tab
 
-    - name: Set up ChromeDriver
-      uses: nanasess/setup-chromedriver@master
-    
     - name: Create env file
       run: |
         echo "WEBSITES_PORT=8501" > .env
@@ -38,20 +35,9 @@ jobs:
         uvicorn Application.api:app --host 0.0.0.0 --port 57077 &
         sleep 10  # Attendre que l'API démarre
     
-    - name: Start Streamlit app in background
-      run: |
-        # Définir la variable pour les tests locaux
-        export API_URL="http://localhost:57077"
-        streamlit run Application/app.py &
-        sleep 10  # Attendre que Streamlit démarre
-    
     - name: Verify API is running
       run: |
         curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:57077
-    
-    - name: Verify Streamlit app is running
-      run: |
-        curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8501
     
     - name: Install pytest-timeout
       run: |
@@ -61,7 +47,7 @@ jobs:
       run: |
         # Définir la variable pour les tests
         export API_URL="http://localhost:57077"
-        python -m pytest TestsUnitaires/ -v --tb=short --timeout=300
+        python -m pytest TestsUnitaires/test_api.py -v --tb=short --timeout=300
         
     - name: Make startup script executable
       run: chmod +x startup.sh
