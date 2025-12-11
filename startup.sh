@@ -8,19 +8,16 @@ if [ ! -d "env" ]; then
 fi
 source env/bin/activate
 
-# Installer les dépendances
-pip install -r requirements_dev.txt
+# Installer les dépendances de PROD uniquement
+# Le flag --no-cache-dir peut aider à éviter les timeouts si l'espace disque est juste
+pip install --no-cache-dir -r requirements.txt
+
+# Télécharger les ressources NLTK nécessaires
 python -m nltk.downloader punkt stopwords wordnet punkt_tab
 
-echo "Démarrage des applications..."
+echo "Démarrage de l'API..."
 cd Application
 
-# Définir la variable d'environnement pour que l'app Streamlit sache où trouver l'API
-export API_URL="http://localhost:8000"
-
-# Démarrer l'API en arrière-plan
-python -m uvicorn api:app --host 0.0.0.0 --port 8000 &
-sleep 5  # Attendre que l'API démarre
-
-# Démarrer Streamlit comme processus principal
-python -m streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
+# Démarrer l'API comme processus PRINCIPAL (pas de & à la fin)
+# Azure attend que le container réponde sur le port 8000
+python -m uvicorn api:app --host 0.0.0.0 --port 8000
