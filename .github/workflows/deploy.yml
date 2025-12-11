@@ -29,11 +29,24 @@ jobs:
         echo "WEBSITES_PORT=8501" > .env
         echo "API_URL=http://localhost:8000" >> .env
     
+    - name: Download Model to Cache
+      run: |
+        mkdir -p models/use
+        python -c "
+        import tensorflow_hub as hub
+        import os
+        os.environ['TFHUB_CACHE_DIR'] = './models/use'
+        model = hub.load('https://tfhub.dev/google/universal-sentence-encoder/4')
+        print('Model downloaded to ./models/use')
+        "
+
     - name: Start API in background
+      env:
+        TFHUB_CACHE_DIR: ./models/use
       run: |
         # Pour les tests, on utilise le port 57077 localement
         uvicorn Application.api:app --host 0.0.0.0 --port 57077 &
-        sleep 10  # Attendre que l'API démarre
+        sleep 30  # Attendre que l'API démarre (chargement du modèle)
     
     - name: Verify API is running
       run: |
