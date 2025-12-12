@@ -3,7 +3,10 @@ import httpx
 import json
 
 # Endpoint de l'API FastAPI
-API_ENDPOINT = "http://127.0.0.1:57077/predict/"
+if "API_ENDPOINT" in st.secrets:
+    API_ENDPOINT = st.secrets["API_ENDPOINT"]
+else:
+    API_ENDPOINT = "http://127.0.0.1:57077/predict/"
 
 def get_sentiment(tweet):
     # Préparer les données pour l'API
