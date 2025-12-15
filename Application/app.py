@@ -13,7 +13,7 @@ def get_sentiment(tweet):
     data = {"tweet": tweet}
     try:
         # Faire une requête POST à l'API pour obtenir le sentiment
-        response = httpx.post(API_ENDPOINT, json=data, timeout=60.0)
+        response = httpx.post(API_ENDPOINT, json=data, timeout=120.0)
         response.raise_for_status()
         result = response.json()
         return result['sentiment'], result["confiance"]
