@@ -22,13 +22,22 @@ import os
 
 # Configuration du logger pour Application Insights
 logger = logging.getLogger(__name__)
-# On ne met le handler que si la clé est présente (pour éviter erreurs en local sans clé)
+
+# DEBUG: Vérification explicite de la variable d'environnement
 if "APPLICATIONINSIGHTS_CONNECTION_STRING" in os.environ:
-    logger.addHandler(AzureLogHandler(connection_string=os.environ["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+    print(f"DEBUG: Variable d'env trouvée : {os.environ['APPLICATIONINSIGHTS_CONNECTION_STRING'][:20]}...")
+    try:
+        azure_handler = AzureLogHandler(connection_string=os.environ["APPLICATIONINSIGHTS_CONNECTION_STRING"])
+        logger.addHandler(azure_handler)
+        print("DEBUG: Handler Azure ajouté avec succès.")
+    except Exception as e:
+        print(f"DEBUG: Erreur lors de l'ajout du Handler Azure : {e}")
 else:
+    print("DEBUG: Variable d'env INTROUVABLE. Passage en mode local.")
     # Fallback pour voir les logs en local
     handler = logging.StreamHandler()
     logger.addHandler(handler)
+
 logger.setLevel(logging.WARNING)
 
 # Charger le modèle sauvegardé
