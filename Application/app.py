@@ -29,7 +29,8 @@ def send_feedback(tweet, prediction):
         "commentaire": "Signalé par utilisateur Streamlit"
     }
     try:
-        httpx.post(feedback_endpoint, json=data, timeout=5.0)
+        response = httpx.post(feedback_endpoint, json=data, timeout=5.0)
+        response.raise_for_status() # Lève une erreur si 404, 500, etc.
         return True
     except Exception as e:
         st.error(f"Impossible d'envoyer le feedback : {e}")
@@ -38,30 +39,40 @@ def send_feedback(tweet, prediction):
 def main():
     st.title("Prédiction du Sentiment d'un Tweet")
 
+    # Initialisation du session_state
+    if "result" not in st.session_state:
+        st.session_state.result = None
+    if "tweet_analyzed" not in st.session_state:
+        st.session_state.tweet_analyzed = ""
+
     # Demander à l'utilisateur de rentrer un tweet
     tweet = st.text_area("Entrez votre tweet ici :")
 
     if st.button("Prévoir le sentiment"):
-        # Supprimer les espaces en début et en fin de chaîne
         cleaned_tweet = tweet.strip()
-        # Vérifier que le tweet contient au moins deux caractères non-espaces
         if len(cleaned_tweet.replace(" ", "")) < 2:
             st.warning("Veuillez entrer un tweet valide.")
         else:
             result = get_sentiment(cleaned_tweet)
             if result:
-                sentiment, confiance = result
-                st.write(f"Le sentiment prédictif est : **{sentiment}**")
-                st.write(f"L'indice de confiance est de : {confiance}")
-                
-                # Zone de Feedback
-                st.markdown("---")
-                st.write("Le résultat vous semble incorrect ?")
-                if st.button("👎 Signaler une erreur"):
-                    if send_feedback(cleaned_tweet, sentiment):
-                        st.success("Merci ! L'erreur a été signalée à l'équipe technique.")
-                    else:
-                        st.error("Erreur lors de l'envoi du signalement.")
+                # Stocker le résultat et le tweet dans la session
+                st.session_state.result = result
+                st.session_state.tweet_analyzed = cleaned_tweet
+
+    # Affichage du résultat s'il existe en session
+    if st.session_state.result:
+        sentiment, confiance = st.session_state.result
+        st.write(f"Le sentiment prédictif est : **{sentiment}**")
+        st.write(f"L'indice de confiance est de : {confiance}")
+        
+        # Zone de Feedback
+        st.markdown("---")
+        st.write("Le résultat vous semble incorrect ?")
+        if st.button("👎 Signaler une erreur"):
+            if send_feedback(st.session_state.tweet_analyzed, sentiment):
+                st.success("Merci ! L'erreur a été signalée à l'équipe technique.")
+            else:
+                st.error("Erreur lors de l'envoi du signalement.")
 
 if __name__ == "__main__":
     main()
