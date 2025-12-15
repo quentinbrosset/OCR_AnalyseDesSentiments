@@ -21,6 +21,20 @@ def get_sentiment(tweet):
         st.error(f"Erreur lors de la requête vers l'API ({API_ENDPOINT}) : {e}")
         return None
 
+def send_feedback(tweet, prediction):
+    feedback_endpoint = API_ENDPOINT.replace("/predict/", "/feedback/")
+    data = {
+        "tweet": tweet,
+        "prediction": prediction,
+        "commentaire": "Signalé par utilisateur Streamlit"
+    }
+    try:
+        httpx.post(feedback_endpoint, json=data, timeout=5.0)
+        return True
+    except Exception as e:
+        st.error(f"Impossible d'envoyer le feedback : {e}")
+        return False
+
 def main():
     st.title("Prédiction du Sentiment d'un Tweet")
 
@@ -39,6 +53,15 @@ def main():
                 sentiment, confiance = result
                 st.write(f"Le sentiment prédictif est : **{sentiment}**")
                 st.write(f"L'indice de confiance est de : {confiance}")
+                
+                # Zone de Feedback
+                st.markdown("---")
+                st.write("Le résultat vous semble incorrect ?")
+                if st.button("👎 Signaler une erreur"):
+                    if send_feedback(cleaned_tweet, sentiment):
+                        st.success("Merci ! L'erreur a été signalée à l'équipe technique.")
+                    else:
+                        st.error("Erreur lors de l'envoi du signalement.")
 
 if __name__ == "__main__":
     main()

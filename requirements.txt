@@ -8,3 +8,5 @@ fastapi==0.115.6
 uvicorn==0.34.0
 scikit-learn==1.5.1
 httpx==0.27.0
+opencensus-ext-azure==1.1.13
+opencensus-ext-logging==0.1.1

@@ -16,6 +16,20 @@ from nltk.stem import WordNetLemmatizer
 import numpy as np
 from pathlib import Path
 import joblib
+from opencensus.ext.azure.log_exporter import AzureLogHandler
+import logging
+import os
+
+# Configuration du logger pour Application Insights
+logger = logging.getLogger(__name__)
+# On ne met le handler que si la clé est présente (pour éviter erreurs en local sans clé)
+if "APPLICATIONINSIGHTS_CONNECTION_STRING" in os.environ:
+    logger.addHandler(AzureLogHandler(connection_string=os.environ["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+else:
+    # Fallback pour voir les logs en local
+    handler = logging.StreamHandler()
+    logger.addHandler(handler)
+logger.setLevel(logging.WARNING)
 
 # Charger le modèle sauvegardé
 model_path = Path(__file__).resolve().parent / 'best_model.joblib'
@@ -27,6 +41,12 @@ app = FastAPI()
 # Définir la structure des données d'entrée
 class TweetInput(BaseModel):
     tweet: str  # Le texte du tweet à analyser
+
+class Feedback(BaseModel):
+    tweet: str
+    prediction: str
+    commentaire: str = None
+
 
 """ Preprocessing du tweet """
 
@@ -288,3 +308,16 @@ def predict_sentiment(data: TweetInput):
     
     # Retourner le sentiment
     return {"tweet": data.tweet, "sentiment": sentiment, "confiance": f"{confiance}%"}
+
+@app.post("/feedback/")
+def log_feedback(feedback: Feedback):
+    # Log spécifique pour App Insights
+    properties = {
+        "custom_dimensions": {
+            "tweet": feedback.tweet,
+            "prediction": feedback.prediction,
+            "type": "IncorrectPrediction" 
+        }
+    }
+    logger.warning("Feedback Utilisateur : Prédiction incorrecte signalée", extra=properties)
+    return {"status": "logged"}
