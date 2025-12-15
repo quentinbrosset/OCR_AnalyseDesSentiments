@@ -6,7 +6,7 @@ import json
 if "API_ENDPOINT" in st.secrets:
     API_ENDPOINT = st.secrets["API_ENDPOINT"]
 else:
-    API_ENDPOINT = "http://127.0.0.1:57077/predict/"
+    API_ENDPOINT = "http://127.0.0.1:8000/predict/"
 
 def get_sentiment(tweet):
     # Préparer les données pour l'API
@@ -17,8 +17,8 @@ def get_sentiment(tweet):
         response.raise_for_status()
         result = response.json()
         return result['sentiment'], result["confiance"]
-    except httpx.RequestError as e:
-        st.error(f"Une erreur s'est produite : {e}")
+    except Exception as e:
+        st.error(f"Erreur lors de la requête vers l'API ({API_ENDPOINT}) : {e}")
         return None
 
 def main():
@@ -34,8 +34,9 @@ def main():
         if len(cleaned_tweet.replace(" ", "")) < 2:
             st.warning("Veuillez entrer un tweet valide.")
         else:
-            sentiment, confiance = get_sentiment(cleaned_tweet)
-            if sentiment:
+            result = get_sentiment(cleaned_tweet)
+            if result:
+                sentiment, confiance = result
                 st.write(f"Le sentiment prédictif est : **{sentiment}**")
                 st.write(f"L'indice de confiance est de : {confiance}")
 
