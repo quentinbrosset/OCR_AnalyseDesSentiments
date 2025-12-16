@@ -18,7 +18,7 @@ Le projet est organisé selon la structure suivante :
 *   **Notebooks/** : Contient les notebooks Jupyter utilisés pour l'analyse exploratoire, le pré-traitement des données et l'entraînement des modèles.
 *   **TestsUnitaires/** : Contient les tests unitaires pour valider la robustesse du code.
 *   **requirements.txt** : Fichier listant l'ensemble des packages Python utilisés dans le projet pour faciliter l'installation de l'environnement de production.
-*   **requirements_dev.txt** : Idem mais contenant en plus les librairies pour le stests unitaires (plus lourd).
+*   **requirements_dev.txt** : Idem avec en plus les librairies pour les tests unitaires (plus lourd).
 *   **runtime.txt, startup.sh, .deployment** : Pour la configuration du déploiement.
 
 ## Installation et Dépendances
