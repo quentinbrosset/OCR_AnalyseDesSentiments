@@ -1,6 +1,4 @@
 pandas==2.2.2
-# keras==3.6.0  # Not needed if using tf.keras
-# torch==2.5.1  # Removed (unused in app/api and causes space issues)
 ipywidgets==7.8.1
 xarray==2023.6.0
 tensorflow-cpu==2.18.0
