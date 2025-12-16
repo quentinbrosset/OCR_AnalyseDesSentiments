@@ -16,8 +16,10 @@ Le projet est organisé selon la structure suivante :
     *   `best_model.joblib` : Le modèle de classification entraîné.
     *   `requirements.txt` : Liste des dépendances spécifiques à l'application.
 *   **Notebooks/** : Contient les notebooks Jupyter utilisés pour l'analyse exploratoire, le pré-traitement des données et l'entraînement des modèles.
-*   **TestsUnitaires/** : Contient les tests unitaires pour valider la robustesse du code (notamment de l'API).
-*   **requirements.txt** (Racine) : Fichier listant l'ensemble des packages Python utilisés dans le projet pour faciliter l'installation de l'environnement complet.
+*   **TestsUnitaires/** : Contient les tests unitaires pour valider la robustesse du code.
+*   **requirements.txt** : Fichier listant l'ensemble des packages Python utilisés dans le projet pour faciliter l'installation de l'environnement de production.
+*   **requirements_dev.txt** : Idem mais contenant en plus les librairies pour le stests unitaires (plus lourd).
+*   **runtime.txt, startup.sh, .deployment** : Pour la configuration du déploiement.
 
 ## Installation et Dépendances
 
@@ -32,5 +34,5 @@ pip install -r requirements.txt
 
 Le projet s'articule autour de deux composants principaux situés dans le dossier `Application/` :
 
-1.  **API (api.py)** : Service web gérant les prédictions.
-2.  **Interface (app.py)** : Dashboard interactif pour tester le modèle.
+1.  **API (api.py)** : Service web gérant les prédictions, dans notre cas, cette API est déployée sur Azure.
+2.  **Interface (app.py)** : Application interactive Streamlit pour tester le modèle.
